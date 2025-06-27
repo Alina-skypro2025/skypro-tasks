@@ -3,7 +3,7 @@ const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments"; // Замени "alina-skypro" на свой personal-key, если нужно
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
 
@@ -53,7 +53,7 @@ function renderComments() {
             const index = button.dataset.index;
             comments[index].isLiked = !comments[index].isLiked;
             comments[index].localLikes += comments[index].isLiked ? 1 : -1;
-            renderComments(); // перерисовать
+            renderComments(); 
         });
     });
 }

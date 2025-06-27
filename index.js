@@ -48,7 +48,6 @@ function renderComments() {
         commentsList.appendChild(li);
     });
 
-    // обработка лайков
     document.querySelectorAll(".like-button").forEach((button) => {
         button.addEventListener("click", () => {
             const index = button.dataset.index;

@@ -1,27 +1,23 @@
-<!DOCTYPE html>
+ 
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Лента комментариев</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <title>Лента комментариев</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
 
-<body>
-  <h1>Лента комментариев</h1>
-
-  <ul id="comments">
-      <li>Мне все понравилось </li>
-  </ul>
-
-  <div class="form">
-    <h3>Добавить комментарий</h3>
-    <input type="text" id="name-input" placeholder="Ваше имя" />
+    <body>
+        <h1>Лента комментариев</h1>
+        <ul id="list">
+           <li>Мне все понравилось </li>
+        </ul>
+        <div>
+            <h3>Добавить комментарий</h3>
+            Что нужно сделать:
+            <input type="text" id="field"placeholder="Ваше имя" />
     <br /><br />
-    <textarea id="text-input" placeholder="Ваш комментарий"></textarea>
-    <br /><br />
-    <button type="button" id="add-button">Добавить</button>
-  </div>
-
-  <script type="module" src="./index.js"></script>
-</body>
+            <button type="button" id="add">Добавить</button>
+        </div>
+        <script type="module" src="./index.js"></script>
+    </body>
 </html>

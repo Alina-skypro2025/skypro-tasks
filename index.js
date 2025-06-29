@@ -1,4 +1,4 @@
-onst commentsList = document.getElementById("comments");
+const commentsList = document.getElementById("comments");
 const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
@@ -35,9 +35,7 @@ function renderComments() {
         <div>${comment.author.name}</div>
         <div>${new Date(comment.date).toLocaleString()}</div>
       </div>
-      <div class="comment-body">
-        <div class="comment-text">${comment.text}</div>
-      </div>
+      <div class="comment-text">${comment.text}</div>
       <div class="comment-footer">
         <button class="like-button" data-index="${index}">
           ♥️ ${comment.localLikes}

@@ -3,7 +3,7 @@ body {
   font-family: Arial, sans-serif;
   color: #ffffff;
   margin: 0;
-  padding: 20 px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,22 +11,22 @@ body {
 
 h1 {
   color: #ffffff;
-  margin-bottom: 30 px;
+  margin-bottom: 30px;
 }
 
 #comments {
   list-style: none;
   padding: 0;
-  width: 90 %;
-  max-width: 600 px;
+  width: 90%;
+  max-width: 600px;
 }
 
 li {
-  background: linear-gradient (145 deg, #1e1e2f, #2d2d3e);
-  border-radius: 15 px;
-  padding: 20 px;
-  margin-bottom: 20 px;
-  box-shadow: 0 4 px 10 px rgba (0, 0, 0, 0.5);
+  background: linear-gradient(145deg, #1e1e2f, #2d2d3e);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -37,13 +37,13 @@ li {
   display: flex;
   justify-content: space-between;
   font-weight: bold;
-  margin-bottom: 10 px;
+  margin-bottom: 10px;
   color: #ccc;
 }
 
 .comment-text {
-  font-size: 18 px;
-  margin-bottom: 15 px;
+  font-size: 18px;
+  margin-bottom: 15px;
 }
 
 .comment-footer {
@@ -56,10 +56,10 @@ li {
   border: none;
   color: #ffffff;
   cursor: pointer;
-  font-size: 18 px;
+  font-size: 18px;
   display: flex;
   align-items: center;
-  gap: 5 px;
+  gap: 5px;
 }
 
 .like-button:hover {
@@ -68,27 +68,27 @@ li {
 
 textarea,
 input {
-  width: 100 %;
-  max-width: 600 px;
-  padding: 10 px;
-  margin-top: 10 px;
-  font-size: 16 px;
-  border-radius: 8 px;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 8px;
   border: none;
   background-color: #1e1e2f;
   color: #ffffff;
 }
 
 button {
-  margin-top: 15 px;
-  padding: 10 px 20 px;
+  margin-top: 15px;
+  padding: 10px 20px;
   background-color: #3f51b5;
   color: #fff;
   border: none;
-  border-radius: 10 px;
-  font-size: 16 px;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.3 s;
+  transition: 0.3s;
 }
 
 button:hover {

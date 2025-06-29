@@ -96,3 +96,5 @@ addButton.addEventListener("click", () => {
       textInput.value = "";
     });
 });
+
+fetchComments();

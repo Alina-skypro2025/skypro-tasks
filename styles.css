@@ -1,47 +1,98 @@
-li {
-  margin-bottom: 10 px;
-  width: 500 px;
+body {
+  background-color: #0d0d0d;
+  font-family: Arial, sans-serif;
+  color: #ffffff;
+  margin: 0;
+  padding: 20 px;
   display: flex;
   flex-direction: column;
-  border: 1 px solid lightgray;
-  padding: 10 px;
+  align-items: center;
+}
+
+h1 {
+  color: #ffffff;
+  margin-bottom: 30 px;
+}
+
+#comments {
   list-style: none;
+  padding: 0;
+  width: 90 %;
+  max-width: 600 px;
 }
 
-li:hover {
-  background-color: aliceblue;
-}
-
-li button {
-  display: inline-block;
-  margin-top: 10 px;
-}
-
-.comment-header {
-  font-weight: bold;
+li {
+  background: linear-gradient (145 deg, #1e1e2f, #2d2d3e);
+  border-radius: 15 px;
+  padding: 20 px;
+  margin-bottom: 20 px;
+  box-shadow: 0 4 px 10 px rgba (0, 0, 0, 0.5);
+  color: #ffffff;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10 px;
+  color: #ccc;
+}
+
 .comment-text {
-  margin-top: 5 px;
+  font-size: 18 px;
+  margin-bottom: 15 px;
 }
 
-textarea {
-  width: 500 px;
-  height: 60 px;
+.comment-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
-input,
-textarea {
-  padding: 5 px;
-  font-size: 14 px;
+.like-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18 px;
+  display: flex;
+  align-items: center;
+  gap: 5 px;
+}
+
+.like-button:hover {
+  color: #ff4081;
+}
+
+textarea,
+input {
+  width: 100 %;
+  max-width: 600 px;
+  padding: 10 px;
+  margin-top: 10 px;
+  font-size: 16 px;
+  border-radius: 8 px;
+  border: none;
+  background-color: #1e1e2f;
+  color: #ffffff;
 }
 
 button {
-  padding: 5 px 10 px;
-  font-size: 14 px;
+  margin-top: 15 px;
+  padding: 10 px 20 px;
+  background-color: #3f51b5;
+  color: #fff;
+  border: none;
+  border-radius: 10 px;
+  font-size: 16 px;
   cursor: pointer;
+  transition: 0.3 s;
+}
+
+button:hover {
+  background-color: #5c6bc0;
 }
 
 .error {

@@ -21,7 +21,8 @@ h1 {
   max-width: 600px;
 }
 
-li.comment {
+
+ li.comment {
   background: linear-gradient(145deg, #1e1e2f, #2d2d3e);
   border-radius: 15px;
   padding: 20px;
@@ -31,6 +32,9 @@ li.comment {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-width: 600px;
+  width: 100%;
+}
 }
 
 .comment-header {

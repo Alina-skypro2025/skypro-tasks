@@ -17,8 +17,14 @@ h1 {
 #comments {
   list-style: none;
   padding: 0;
-  width: 90%;
+  width: 100%;
   max-width: 600px;
+}
+
+.comment-text {
+  font-size: 18px;
+  margin-bottom: 15px;
+  word-wrap: break-word;
 }
 
 
@@ -34,7 +40,7 @@ h1 {
   justify-content: space-between;
   max-width: 600px;
   width: 100%;
-}
+  box-sizing: border-box;
 }
 
 .comment-header {
@@ -45,9 +51,12 @@ h1 {
   color: #ccc;
 }
 
-.comment-text {
-  font-size: 18px;
-  margin-bottom: 15px;
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ccc;
 }
 
 .comment-footer {

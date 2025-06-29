@@ -1,21 +1,49 @@
 li {
-    margin-bottom: 10px;
-    width: 500px;
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid lightgray;
-    padding: 10px;
+  margin-bottom: 10 px;
+  width: 500 px;
+  display: flex;
+  flex-direction: column;
+  border: 1 px solid lightgray;
+  padding: 10 px;
+  list-style: none;
 }
 
 li:hover {
-    background-color: aliceblue;
+  background-color: aliceblue;
 }
 
 li button {
-    display: inline-block;
-    margin-left: 10px;
+  display: inline-block;
+  margin-top: 10 px;
+}
+
+.comment-header {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-text {
+  margin-top: 5 px;
+}
+
+textarea {
+  width: 500 px;
+  height: 60 px;
+}
+
+input,
+textarea {
+  padding: 5 px;
+  font-size: 14 px;
+}
+
+button {
+  padding: 5 px 10 px;
+  font-size: 14 px;
+  cursor: pointer;
 }
 
 .error {
-    background-color: red;
+  background-color: red;
 }

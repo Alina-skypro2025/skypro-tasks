@@ -68,10 +68,13 @@ addButton.addEventListener("click", () => {
   addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
+
   fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, text }),
+    body: formData,
   })
     .then((response) => {
       if (response.status === 201) {

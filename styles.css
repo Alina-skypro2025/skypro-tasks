@@ -12,6 +12,7 @@ body {
 h1 {
   color: #ffffff;
   margin-bottom: 30px;
+  text-align: center;
 }
 
 #comments {
@@ -22,29 +23,13 @@ h1 {
   margin: 0 auto;
 }
 
-#comments, body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.comment-text {
-  font-size: 18px;
-  margin-bottom: 15px;
-  word-wrap: break-word;
-}
-
-
- li.comment {
+.comment {
   background: linear-gradient(145deg, #1e1e2f, #2d2d3e);
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
 }
@@ -57,12 +42,22 @@ h1 {
   color: #ccc;
 }
 
-.comment-header {
-  display: flex;
-  justify-content: space-between;
+.comment-name {
   font-weight: bold;
-  margin-bottom: 10px;
-  color: #ccc;
+  color: #ffffff;
+}
+
+.comment-date {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.comment-text {
+  font-size: 18px;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+  line-height: 1.5;
+  white-space: pre-line;
 }
 
 .comment-footer {
@@ -85,12 +80,11 @@ h1 {
   color: #ff4081;
 }
 
-textarea,
-input {
+#name-input, #text-input {
   width: 100%;
   max-width: 600px;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 12px;
+  margin: 10px 0;
   font-size: 16px;
   border-radius: 8px;
   border: none;
@@ -98,22 +92,31 @@ input {
   color: #ffffff;
 }
 
-button {
+#text-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+#add-button {
   margin-top: 15px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background-color: #3f51b5;
   color: #fff;
   border: none;
   border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s;
 }
 
-button:hover {
+#add-button:hover {
   background-color: #5c6bc0;
 }
 
 .error {
-  background-color: red;
+  color: #ff4081;
+  margin: 10px 0;
+  padding: 8px;
+  background-color: rgba(255, 64, 129, 0.1);
+  border-radius: 4px;
 }

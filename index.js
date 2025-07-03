@@ -3,11 +3,11 @@ const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments"; 
 
 let comments = [];
 
-
+// Загрузка комментариев
 function fetchComments() {
   fetch(API_URL)
     .then((response) => response.json())
@@ -21,7 +21,7 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
+      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>; 
     });
 }
 
@@ -30,7 +30,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
+    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>; 
     return;
   }
 
@@ -44,16 +44,14 @@ function renderComments() {
         <div class="comment-date">${new Date(comment.date).toLocaleString()}</div>
       </div>
       <div class="comment-text">${comment.text}</div>
-      <div class="comment-footer">
-        <button class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">
-          ❤️ ${comment.localLikes}
-        </button>
+      <div class="likes">
+        <i class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">❤️</i>
+        <span>${comment.localLikes}</span>
       </div>
     `;
 
     commentsList.appendChild(li);
   });
-
 
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -65,7 +63,7 @@ function renderComments() {
   });
 }
 
-// Обработчик кнопки "Добавить"
+
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
@@ -78,13 +76,16 @@ addButton.addEventListener("click", () => {
   addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("text", text);
-
+ 
   fetch(API_URL, {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      author: name,
+      text: text,
+    }),
   })
     .then((response) => {
       if (response.status === 201) {
@@ -102,7 +103,7 @@ addButton.addEventListener("click", () => {
     })
     .finally(() => {
       addButton.disabled = false;
-      addButton.textContent = "Добавить";
+      addButton.textContent = "Написать";
       nameInput.value = "";
       textInput.value = "";
     });

@@ -3,7 +3,7 @@ const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments ";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
 
@@ -65,7 +65,7 @@ function renderComments() {
   });
 }
 
-
+// Обработчик кнопки "Добавить"
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
@@ -108,5 +108,5 @@ addButton.addEventListener("click", () => {
     });
 });
 
-// Загружаем комментарии при запуске
+
 fetchComments();

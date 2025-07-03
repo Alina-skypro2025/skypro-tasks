@@ -3,9 +3,10 @@ const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments ";
 
 let comments = [];
+
 
 function fetchComments() {
   fetch(API_URL)
@@ -20,11 +21,18 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
+      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
     });
 }
 
+
 function renderComments() {
   commentsList.innerHTML = "";
+
+  if (comments.length === 0) {
+    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
+    return;
+  }
 
   comments.forEach((comment, index) => {
     const li = document.createElement("li");
@@ -32,19 +40,20 @@ function renderComments() {
 
     li.innerHTML = `
       <div class="comment-header">
-        <div>${comment.author.name}</div>
-        <div>${new Date(comment.date).toLocaleString()}</div>
+        <div class="comment-name">${comment.author.name}</div>
+        <div class="comment-date">${new Date(comment.date).toLocaleString()}</div>
       </div>
       <div class="comment-text">${comment.text}</div>
       <div class="comment-footer">
-        <button class="like-button" data-index="${index}">
-          ♥️ ${comment.localLikes}
+        <button class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">
+          ❤️ ${comment.localLikes}
         </button>
       </div>
     `;
 
     commentsList.appendChild(li);
   });
+
 
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -55,6 +64,7 @@ function renderComments() {
     });
   });
 }
+
 
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();
@@ -97,5 +107,6 @@ addButton.addEventListener("click", () => {
       textInput.value = "";
     });
 });
+
 
 fetchComments();

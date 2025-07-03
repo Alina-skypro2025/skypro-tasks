@@ -44,16 +44,14 @@ function renderComments() {
         <div class="comment-date">${new Date(comment.date).toLocaleString()}</div>
       </div>
       <div class="comment-text">${comment.text}</div>
-      <div class="comment-footer">
-        <button class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">
-          ❤️ ${comment.localLikes}
-        </button>
+      <div class="likes">
+        <span>${comment.localLikes}</span>
+        <i class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">❤️</i>
       </div>
     `;
 
     commentsList.appendChild(li);
   });
-
 
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -102,7 +100,7 @@ addButton.addEventListener("click", () => {
     })
     .finally(() => {
       addButton.disabled = false;
-      addButton.textContent = "Добавить";
+      addButton.textContent = "Написать";
       nameInput.value = "";
       textInput.value = "";
     });

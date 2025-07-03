@@ -26,12 +26,13 @@ h1 {
 }
 
 .comment {
-  background: linear-gradient(145deg, #1e1e2f, #2d2d3e);
+  background: linear-gradient(145deg, #7e57c2, #ba68c8);
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   color: #ffffff;
+  position: relative;
 }
 
 .comment-header {
@@ -58,97 +59,60 @@ h1 {
   white-space: pre-line;
 }
 
+.likes {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+}
+
+.likes span {
+  font-size: 18px;
+}
+
+.likes i {
+  font-size: 20px;
+  color: #ffeb3b; /* Цвет сердечка */
+}
+
 .comment-form {
   width: 100%;
   max-width: 600px;
-  background: linear-gradient(145deg, #1e1e2f, #2d2d3e);
+  background: linear-gradient(145deg, #7e57c2, #ba68c8);
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   margin-bottom: 30px;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  color: #ccc;
-}
-
-input[type="text"],
-textarea {
+.comment-form input,
+.comment-form textarea {
   width: 100%;
   padding: 12px;
   font-size: 16px;
   border-radius: 8px;
   border: none;
-  background-color: #2d2d3e;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   box-sizing: border-box;
+  margin-bottom: 15px;
 }
 
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-button[type="submit"] {
-  margin-top: 15px;
+.comment-form button {
   padding: 12px 25px;
-  background-color: #3f51b5;
+  background-color: #aeea00; /* Зелёный цвет кнопки */
   color: #fff;
   border: none;
   border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
-  width: 100%;
+  width: fit-content;
 }
 
-button[type="submit"]:hover {
-  background-color: #5c6bc0;
-}
-
-.like-button {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.like-button:hover {
-  color: #ff4081;
-}
-
-.like-button.active {
-  color: #ff4081;
-}
-
-.error {
-  color: #ff4081;
-  background-color: rgba(255, 64, 129, 0.1);
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  width: 100%;
-  text-align: center;
-}
-
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #ccc;
-}
-
-.empty-state {
-  text-align: center;
-  color: #7f8c8d;
-  padding: 30px;
+.comment-form button:hover {
+  background-color: #9ccc00; /* Светлее при наведении */
 }

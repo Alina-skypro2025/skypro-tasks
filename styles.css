@@ -26,7 +26,7 @@ h1 {
 }
 
 .comment {
-  background: linear-gradient(145deg, #7e57c2, #ba68c8);
+ background: linear-gradient(145deg, #0096ff, #6a1b9a);
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 20px;
@@ -48,11 +48,11 @@ h1 {
 
 .comment-date {
   color: #7f8c8d;
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .comment-text {
-  font-size: 18px;
+  font-size: 25px;
   margin-bottom: 15px;
   word-wrap: break-word;
   line-height: 1.5;
@@ -75,7 +75,7 @@ h1 {
 
 .likes i {
   font-size: 20px;
-  color: #ffeb3b; /* Цвет сердечка */
+  color: #ffeb3b; 
 }
 
 .comment-form {
@@ -103,16 +103,16 @@ h1 {
 
 .comment-form button {
   padding: 12px 25px;
-  background-color: #aeea00; /* Зелёный цвет кнопки */
+  background-color: #aeea00;
   color: #fff;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   transition: 0.3s;
-  width: fit-content;
+  align-self: flex-end;
 }
 
 .comment-form button:hover {
-  background-color: #9ccc00; /* Светлее при наведении */
+  background-color: #9ccc00;
 }

@@ -62,13 +62,12 @@ h1 {
 }
 
 .likes {
+ display: flex;
+  align-items: center;
+  gap: 5px;
   position: absolute;
   bottom: 20px;
   right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #fff;
 }
 
 .likes span {

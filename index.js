@@ -21,7 +21,7 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>;
+      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
     });
 }
 
@@ -30,7 +30,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
+    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
     return;
   }
 

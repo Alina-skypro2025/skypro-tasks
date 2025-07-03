@@ -7,7 +7,7 @@ const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
 
-// Загрузка комментариев
+
 function fetchComments() {
   fetch(API_URL)
     .then((response) => response.json())
@@ -21,7 +21,7 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-     commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`; 
+      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>;
     });
 }
 
@@ -30,7 +30,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
+    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
     return;
   }
 
@@ -77,15 +77,13 @@ addButton.addEventListener("click", () => {
   addButton.textContent = "Отправка...";
 
  
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
+
   fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      author: name,
-      text: text,
-    }),
+    body: formData, 
   })
     .then((response) => {
       if (response.status === 201) {

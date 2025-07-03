@@ -21,7 +21,7 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>;
+      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
     });
 }
 
@@ -30,7 +30,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
+    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
     return;
   }
 
@@ -44,14 +44,16 @@ function renderComments() {
         <div class="comment-date">${new Date(comment.date).toLocaleString()}</div>
       </div>
       <div class="comment-text">${comment.text}</div>
-      <div class="likes">
-        <span>${comment.localLikes}</span>
-        <i class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">❤️</i>
+      <div class="comment-footer">
+        <button class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">
+          ❤️ ${comment.localLikes}
+        </button>
       </div>
     `;
 
     commentsList.appendChild(li);
   });
+
 
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -100,11 +102,11 @@ addButton.addEventListener("click", () => {
     })
     .finally(() => {
       addButton.disabled = false;
-      addButton.textContent = "Написать";
+      addButton.textContent = "Добавить";
       nameInput.value = "";
       textInput.value = "";
     });
 });
 
-
+// Загружаем комментарии при запуске
 fetchComments();

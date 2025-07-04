@@ -7,7 +7,6 @@ const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
 
-
 function fetchComments() {
   fetch(API_URL)
     .then((response) => response.json())
@@ -21,16 +20,15 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
+      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>;
     });
 }
-
 
 function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
+    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
     return;
   }
 
@@ -63,7 +61,6 @@ function renderComments() {
   });
 }
 
-
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
@@ -76,14 +73,17 @@ addButton.addEventListener("click", () => {
   addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
- 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("text", text);
+  const userComment = {
+    name: name,
+    text: text,
+  };
 
   fetch(API_URL, {
     method: "POST",
-    body: formData, 
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userComment),
   })
     .then((response) => {
       if (response.status === 201) {
@@ -106,6 +106,5 @@ addButton.addEventListener("click", () => {
       textInput.value = "";
     });
 });
-
 
 fetchComments();

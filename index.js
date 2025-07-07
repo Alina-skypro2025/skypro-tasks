@@ -2,13 +2,18 @@ const commentsList = document.getElementById("comments");
 const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
+const commentForm = document.querySelector(".comment-form");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments"; 
-
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 let comments = [];
 
+function showLoadingMessage(message) {
+  commentsList.innerHTML = <div class="loading">${message}</div>;
+}
+
 function fetchComments() {
-  fetch(API_URL)
+  showLoadingMessage("Загрузка комментариев...");
+  return fetch(API_URL)
     .then((response) => response.json())
     .then((data) => {
       comments = data.comments.map((comment) => ({
@@ -20,7 +25,7 @@ function fetchComments() {
     })
     .catch((error) => {
       console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
+      commentsList.innerHTML = <div class="error">Не удалось загрузить комментарии</div>;
     });
 }
 
@@ -28,7 +33,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
+    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
     return;
   }
 
@@ -61,29 +66,14 @@ function renderComments() {
   });
 }
 
-addButton.addEventListener("click", () => {
-  const name = nameInput.value.trim();
-  const text = textInput.value.trim();
+function addComment({ name, text }) {
+  commentForm.style.display = "none";
+  commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
-  if (name.length < 3 || text.length < 3) {
-    alert("Имя и комментарий должны содержать минимум 3 символа.");
-    return;
-  }
-
-  addButton.disabled = true;
-  addButton.textContent = "Отправка...";
-
-  const userComment = {
-    name: name,
-    text: text,
-  };
-
-  fetch(API_URL, {
+  return fetch(API_URL, {
     method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userComment),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, text }),
   })
     .then((response) => {
       if (response.status === 201) {
@@ -100,11 +90,30 @@ addButton.addEventListener("click", () => {
       alert(`Ошибка: ${error.message}`);
     })
     .finally(() => {
-      addButton.disabled = false;
-      addButton.textContent = "Написать";
+      document.getElementById("adding").remove();
+      commentForm.style.display = "block";
       nameInput.value = "";
       textInput.value = "";
     });
+}
+
+addButton.addEventListener("click", () => {
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
+
+  if (name.length < 3 || text.length < 3) {
+    alert("Имя и комментарий должны содержать минимум 3 символа.");
+    return;
+  }
+
+  addButton.disabled = true;
+  addButton.textContent = "Отправка...";
+
+  addComment({ name, text }).finally(() => {
+    addButton.disabled = false;
+    addButton.textContent = "Написать";
+  });
 });
+
 
 fetchComments();

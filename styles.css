@@ -120,3 +120,16 @@ h1 {
 .comment-form button:hover {
   background-color: #9ccc00;
 }
+.loading,
+.error,
+.empty-state {
+  margin: 20px;
+  text-align: center;
+  color: #666;
+}
+
+#adding {
+  margin: 10px 0;
+  text-align: center;
+  font-style: italic;
+}

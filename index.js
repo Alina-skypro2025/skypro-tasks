@@ -115,5 +115,4 @@ addButton.addEventListener("click", () => {
   });
 });
 
-
 fetchComments();

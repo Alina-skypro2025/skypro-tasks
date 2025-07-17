@@ -8,7 +8,7 @@ const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 let comments = [];
 
 function showLoadingMessage(message) {
-  commentsList.innerHTML = <div class="loading">${message}</div>;
+  commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
 
 function fetchComments() {

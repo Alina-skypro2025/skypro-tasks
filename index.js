@@ -5,7 +5,18 @@ const textInput = document.getElementById("text-input");
 const commentForm = document.querySelector(".comment-form");
 
 const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+
 let comments = [];
+
+let savedName = "";
+let savedText = "";
+
+nameInput.addEventListener("input", () => {
+  savedName = nameInput.value;
+});
+textInput.addEventListener("input", () => {
+  savedText = textInput.value;
+});
 
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
@@ -14,7 +25,12 @@ function showLoadingMessage(message) {
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
   return fetch(API_URL)
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status >= 500) {
+        throw new Error("Сервер недоступен. Попробуйте позже.");
+      }
+      return response.json();
+    })
     .then((data) => {
       comments = data.comments.map((comment) => ({
         ...comment,
@@ -24,10 +40,14 @@ function fetchComments() {
       renderComments();
     })
     .catch((error) => {
-      console.error("Ошибка загрузки комментариев:", error);
-      commentsList.innerHTML = `<div class="error">Не удалось загрузить комментарии</div>`;
+      if (error.message === "Failed to fetch") {
+        commentsList.innerHTML = `<div class="error">Нет интернета. Проверьте соединение.</div>`;
+      } else {
+        commentsList.innerHTML = `<div class="error">${error.message}</div>`;
+      }
     });
 }
+
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -56,6 +76,9 @@ function renderComments() {
     commentsList.appendChild(li);
   });
 
+  nameInput.value = savedName;
+  textInput.value = savedText;
+
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
       const index = button.dataset.index;
@@ -73,27 +96,40 @@ function addComment({ name, text }) {
   return fetch(API_URL, {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, text }),
+    body: JSON.stringify({
+      name,
+      text,
+     
+      forceError: true,
+    }),
   })
     .then((response) => {
       if (response.status === 201) {
+        
+        savedName = "";
+        savedText = "";
+        nameInput.value = "";
+        textInput.value = "";
         return fetchComments();
       } else if (response.status === 400) {
         return response.json().then((data) => {
-          throw new Error(data.error);
+          throw new Error(data.error || "Неверные данные");
         });
-      } else {
+      } else if (response.status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");
       }
     })
     .catch((error) => {
-      alert(`Ошибка: ${error.message}`);
+      if (error.message === "Failed to fetch") {
+        alert("Нет интернета. Повторите позже.");
+      } else {
+        alert(`Ошибка: ${error.message}`);
+      }
     })
     .finally(() => {
-      document.getElementById("adding").remove();
+      const addingEl = document.getElementById("adding");
+      if (addingEl) addingEl.remove();
       commentForm.style.display = "block";
-      nameInput.value = "";
-      textInput.value = "";
     });
 }
 

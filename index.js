@@ -1,3 +1,4 @@
+
 const commentsList = document.getElementById("comments");
 const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
@@ -11,6 +12,7 @@ let comments = [];
 let savedName = "";
 let savedText = "";
 
+
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
 });
@@ -21,6 +23,7 @@ textInput.addEventListener("input", () => {
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
+
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
@@ -93,18 +96,16 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
- const formData = new FormData();
-formData.append("name", name);
-formData.append("text", text);
- formData.append("forceError", true); 
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
 
-return fetch(API_URL, {
-  method: "POST",
-  body: formData,
-});
+  return fetch(API_URL, {
+    method: "POST",
+    body: formData,
+  })
     .then((response) => {
       if (response.status === 201) {
-        
         savedName = "";
         savedText = "";
         nameInput.value = "";
@@ -112,7 +113,7 @@ return fetch(API_URL, {
         return fetchComments();
       } else if (response.status === 400) {
         return response.json().then((data) => {
-          throw new Error(data.error + "Неверные данные");
+          throw new Error(data.error + " Неверные данные");
         });
       } else if (response.status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");
@@ -131,6 +132,7 @@ return fetch(API_URL, {
       commentForm.style.display = "block";
     });
 }
+
 
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();

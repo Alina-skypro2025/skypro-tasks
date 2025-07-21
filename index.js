@@ -4,10 +4,9 @@ const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 const commentForm = document.querySelector(".comment-form");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments ";
 
 let comments = [];
-
 let savedName = "";
 let savedText = "";
 
@@ -92,13 +91,18 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("text", text);
+
+  const body = {
+    name,
+    text,
+  };
 
   return fetch(API_URL, {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   })
     .then((response) => {
       if (response.status === 201) {
@@ -138,7 +142,7 @@ addButton.addEventListener("click", () => {
     return;
   }
 
- addButton.disabled = true;
+  addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
   addComment({ name, text }).finally(() => {

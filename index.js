@@ -91,18 +91,14 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
-
-  const body = {
-    name,
-    text,
-  };
-
   return fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name,
+      text,
+      forceError: true, 
+    }),
   })
     .then((response) => {
       if (response.status === 201) {

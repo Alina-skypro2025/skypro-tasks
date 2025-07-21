@@ -113,7 +113,7 @@ function addComment({ name, text }) {
         return fetchComments();
       } else if (response.status === 400) {
         return response.json().then((data) => {
-          throw new Error(data.error || "Неверные данные");
+          throw new Error(data.error + "Неверные данные");
         });
       } else if (response.status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");

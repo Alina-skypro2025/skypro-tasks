@@ -92,12 +92,13 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
+
   return fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, text }),
+    body: formData,
   })
     .then((response) => {
       if (response.status === 201) {
@@ -137,7 +138,7 @@ addButton.addEventListener("click", () => {
     return;
   }
 
-  addButton.disabled = true;
+ addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
   addComment({ name, text }).finally(() => {

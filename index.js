@@ -99,7 +99,6 @@ function addComment({ name, text }) {
       name,
       text,
      
-      forceError: true,
     }),
   })
     .then((response) => {

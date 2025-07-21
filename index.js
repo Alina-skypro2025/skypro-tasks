@@ -4,7 +4,7 @@ const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 const commentForm = document.querySelector(".comment-form");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments ";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
 let savedName = "";
@@ -17,6 +17,7 @@ nameInput.addEventListener("input", () => {
 textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
+
 
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
@@ -48,6 +49,7 @@ function fetchComments() {
       }
     });
 }
+
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -89,6 +91,7 @@ function renderComments() {
   });
 }
 
+
 function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
@@ -99,7 +102,7 @@ function addComment({ name, text }) {
 
   return fetch(API_URL, {
     method: "POST",
-
+    body: formData,
   })
     .then((response) => {
       if (response.status === 201) {
@@ -132,7 +135,7 @@ function addComment({ name, text }) {
 
 
 addButton.addEventListener("click", () => {
-  const name = nameInput.value.trim();
+ const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
   if (name.length < 3 || text.length < 3) {

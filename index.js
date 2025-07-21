@@ -10,6 +10,7 @@ let comments = [];
 let savedName = "";
 let savedText = "";
 
+
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
 });
@@ -20,6 +21,7 @@ textInput.addEventListener("input", () => {
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
+
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
@@ -91,14 +93,13 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
+
   return fetch(API_URL, {
     method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name,
-      text,
-      forceError: true, 
-    }),
+
   })
     .then((response) => {
       if (response.status === 201) {
@@ -128,6 +129,7 @@ function addComment({ name, text }) {
       commentForm.style.display = "block";
     });
 }
+
 
 addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();

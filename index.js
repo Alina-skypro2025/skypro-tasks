@@ -103,7 +103,7 @@ function addComment({ name, text }) {
   return fetch(API_URL, {
     method: "POST",
     body: formData,
-  })
+  });
     .then((response) => {
       if (response.status === 201) {
         savedName = "";

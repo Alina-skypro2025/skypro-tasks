@@ -4,10 +4,9 @@ const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
 const commentForm = document.querySelector(".comment-form");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments ";
 
 let comments = [];
-
 let savedName = "";
 let savedText = "";
 
@@ -49,7 +48,6 @@ function fetchComments() {
       }
     });
 }
-
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -101,7 +99,7 @@ function addComment({ name, text }) {
 
   return fetch(API_URL, {
     method: "POST",
-    body: formData,
+
   })
     .then((response) => {
       if (response.status === 201) {
@@ -150,6 +148,5 @@ addButton.addEventListener("click", () => {
     addButton.textContent = "Написать";
   });
 });
-
 
 fetchComments();

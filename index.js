@@ -7,9 +7,9 @@ const commentForm = document.querySelector(".comment-form");
 const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
 
 let comments = [];
-
 let savedName = "";
 let savedText = "";
+
 
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
@@ -18,9 +18,11 @@ textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
 
+
 function showLoadingMessage(message) {
-  commentsList.innerHTML = <div class="loading">${message}</div>;
+  commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
+
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
@@ -41,9 +43,9 @@ function fetchComments() {
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
-        commentsList.innerHTML = <div class="error">Нет интернета. Проверьте соединение.</div>;
+        commentsList.innerHTML = `<div class="error">Нет интернета. Проверьте соединение.</div>`;
       } else {
-        commentsList.innerHTML = <div class="error">${error.message}</div>;
+        commentsList.innerHTML = `<div class="error">${error.message}</div>`;
       }
     });
 }
@@ -53,7 +55,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
+    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
     return;
   }
 
@@ -89,21 +91,21 @@ function renderComments() {
   });
 }
 
+
 function addComment({ name, text }) {
   commentForm.style.display = "none";
-  commentsList.insertAdjacentHTML("beforebegin", <div id="adding">Комментарий добавляется...</div>);
+  commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("text", text);
+
   return fetch(API_URL, {
     method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name,
-      text,
-     
-    }),
+    body: formData,
   })
     .then((response) => {
       if (response.status === 201) {
-        
         savedName = "";
         savedText = "";
         nameInput.value = "";
@@ -111,7 +113,7 @@ function addComment({ name, text }) {
         return fetchComments();
       } else if (response.status === 400) {
         return response.json().then((data) => {
-          throw new Error(data.error  "Неверные данные");
+          throw new Error(data.error + " Неверные данные");
         });
       } else if (response.status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");
@@ -131,11 +133,12 @@ function addComment({ name, text }) {
     });
 }
 
+
 addButton.addEventListener("click", () => {
-  const name = nameInput.value.trim();
+ const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
-  if (name.length < 3  text.length < 3) {
+  if (name.length < 3 || text.length < 3) {
     alert("Имя и комментарий должны содержать минимум 3 символа.");
     return;
   }
@@ -148,6 +151,5 @@ addButton.addEventListener("click", () => {
     addButton.textContent = "Написать";
   });
 });
-
 
 fetchComments();

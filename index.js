@@ -91,17 +91,16 @@ function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
-
-  const params = new URLSearchParams();
-  params.append("name", name);
-  params.append("text", text);
-
+  // Отправляем данные в формате JSON
   return fetch(API_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json", // Указываем Content-Type для JSON
     },
-    body: params,
+    body: JSON.stringify({
+      name: name,
+      text: text,
+    }),
   })
     .then((response) => {
       if (response.status === 201) {

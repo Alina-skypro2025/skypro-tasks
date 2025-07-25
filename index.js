@@ -18,11 +18,11 @@ textInput.addEventListener("input", () => {
 });
 
 function showLoadingMessage(message) {
-  commentsList.innerHTML = <div class="loading">${message}</div>;
+  commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
 
 function showError(message) {
-  commentsList.innerHTML = <div class="error">${message}</div>;
+  commentsList.innerHTML = `<div class="error">${message}</div>`;
 }
 
 function fetchComments() {
@@ -55,7 +55,7 @@ function renderComments() {
   commentsList.innerHTML = "";
 
   if (comments.length === 0) {
-    commentsList.innerHTML = <div class="empty-state">Нет комментариев</div>;
+    commentsList.innerHTML = `<div class="empty-state">Нет комментариев</div>`;
     return;
   }
 

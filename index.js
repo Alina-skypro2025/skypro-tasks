@@ -10,7 +10,6 @@ let comments = [];
 let savedName = "";
 let savedText = "";
 
-
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
 });
@@ -18,11 +17,9 @@ textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
 
-
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
-
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
@@ -49,7 +46,6 @@ function fetchComments() {
       }
     });
 }
-
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -91,18 +87,20 @@ function renderComments() {
   });
 }
 
-
 function addComment({ name, text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("text", text);
-
+  // Исправлено: отправляем данные в формате JSON
   return fetch(API_URL, {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: name,
+      text: text
+    }),
   })
     .then((response) => {
       if (response.status === 201) {
@@ -117,6 +115,8 @@ function addComment({ name, text }) {
         });
       } else if (response.status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`);
       }
     })
     .catch((error) => {
@@ -133,9 +133,8 @@ function addComment({ name, text }) {
     });
 }
 
-
 addButton.addEventListener("click", () => {
- const name = nameInput.value.trim();
+  const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
   if (name.length < 3 || text.length < 3) {

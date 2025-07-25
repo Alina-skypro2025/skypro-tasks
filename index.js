@@ -95,13 +95,11 @@ function addComment({ name, text }) {
 
   return fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+   
     body: JSON.stringify({
       name: name,
       text: text,
-      forceError: true, 
+      forceError: true,
     }),
   })
     .then((response) => {

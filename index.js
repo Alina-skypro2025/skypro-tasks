@@ -95,11 +95,10 @@ function addComment({ name, text }) {
 
   return fetch(API_URL, {
     method: "POST",
-   
     body: JSON.stringify({
       name: name,
       text: text,
-      forceError: true,
+     
     }),
   })
     .then((response) => {
@@ -109,15 +108,17 @@ function addComment({ name, text }) {
         nameInput.value = "";
         textInput.value = "";
         return fetchComments();
-      } else if (response.status === 400) {
-        return response.json().then((data) => {
-          throw new Error(data.error + " — Неверные данные");
-        });
-      } else if (response.status >= 500) {
-        throw new Error("Ошибка сервера. Попробуйте позже.");
-      } else {
-        throw new Error(`Ошибка: ${response.status}`);
       }
+
+      return response.json().then((data) => {
+        if (response.status === 400) {
+          throw new Error(data.error + " — Неверные данные");
+        }
+        if (response.status >= 500) {
+          throw new Error("Ошибка сервера. Попробуйте позже.");
+        }
+        throw new Error(`Ошибка: ${response.status}`);
+      });
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -137,10 +138,6 @@ addButton.addEventListener("click", () => {
   const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
-  if (name.length < 3 || text.length < 3) {
-    alert("Имя и комментарий должны содержать минимум 3 символа.");
-    return;
-  }
 
   addButton.disabled = true;
   addButton.textContent = "Отправка...";

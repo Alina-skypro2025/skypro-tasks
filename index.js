@@ -2,14 +2,26 @@ const commentsList = document.getElementById("comments");
 const addButton = document.getElementById("add-button");
 const nameInput = document.getElementById("name-input");
 const textInput = document.getElementById("text-input");
-const commentForm = document.querySelector(".comment-form");
+const commentForm = document.getElementById("comment-form");
+const authContainer = document.getElementById("auth-container");
+const loginForm = document.getElementById("login-form");
+const loginInput = document.getElementById("login-input");
+const passwordInput = document.getElementById("password-input");
+const loginButton = document.getElementById("login-button");
+const loginError = document.getElementById("login-error");
 
-const API_URL = "https://wedev-api.sky.pro/api/v1/alina-skypro/comments";
+
+const PERSONAL_KEY = "alina-skypro";
+const BASE_URL = `https://wedev-api.sky.pro/api/v2/${PERSONAL_KEY}`;
+const COMMENTS_URL = `${BASE_URL}/comments`;
+const LOGIN_URL = "https://wedev-api.sky.pro/api/user/login";
 
 let comments = [];
 let savedName = "";
 let savedText = "";
-
+let token = localStorage.getItem("token");
+let userName = localStorage.getItem("userName");
+let userLogin = localStorage.getItem("userLogin");
 
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
@@ -17,6 +29,114 @@ nameInput.addEventListener("input", () => {
 textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
+
+function updateAuthUI() {
+  if (token) {
+    authContainer.innerHTML = `
+      <div style="text-align: right; margin-bottom: 15px;">
+        <span>Вы вошли как <strong>${userName}</strong></span>
+        <button id="logout-button" style="margin-left: 10px; background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Выйти</button>
+      </div>
+    `;
+    document.getElementById("logout-button").addEventListener("click", logout);
+    commentForm.style.display = "block";
+    nameInput.value = userName;
+  } else {
+    authContainer.innerHTML = `
+      <div style="text-align: center; padding: 15px; background: #e9f7fe; border-radius: 5px; margin-bottom: 20px;">
+        Чтобы добавить комментарий, <a href="#" id="show-login" style="color: #007bff; text-decoration: none; font-weight: bold;">авторизуйтесь</a>
+      </div>
+    `;
+    document.getElementById("show-login").addEventListener("click", (e) => {
+      e.preventDefault();
+      showLoginForm();
+    });
+    commentForm.style.display = "none";
+  }
+}
+
+function showLoginForm() {
+  commentForm.style.display = "none";
+  loginForm.style.display = "block";
+}
+
+function hideLoginForm() {
+  loginForm.style.display = "none";
+  commentForm.style.display = token ? "block" : "none";
+}
+
+function loginUser() {
+  const login = loginInput.value.trim();
+  const password = passwordInput.value.trim();
+  
+  if (!login || !password) {
+    showErrorLogin("Заполните все поля");
+    return;
+  }
+  
+  loginButton.disabled = true;
+  loginButton.textContent = "Вход...";
+  loginError.style.display = "none";
+  
+  fetch(LOGIN_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ login, password }),
+  })
+    .then((response) => {
+      if (response.status === 201) {
+        return response.json();
+      } else if (response.status === 400) {
+        return response.json().then((data) => {
+          throw new Error(data.error);
+        });
+      } else if (response.status >= 500) {
+        throw new Error("Сервер недоступен. Попробуйте позже.");
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`);
+      }
+    })
+    .then((data) => {
+      token = data.user.token;
+      userName = data.user.name;
+      userLogin = data.user.login;
+      localStorage.setItem("token", token);
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userLogin", userLogin);
+      
+      hideLoginForm();
+      updateAuthUI();
+      fetchComments();
+    })
+    .catch((error) => {
+      if (error.message === "Failed to fetch") {
+        showErrorLogin("Нет интернета. Проверьте соединение.");
+      } else {
+        showErrorLogin(error.message);
+      }
+    })
+    .finally(() => {
+      loginButton.disabled = false;
+      loginButton.textContent = "Войти";
+    });
+}
+
+function logout() {
+  token = null;
+  userName = "";
+  userLogin = "";
+  localStorage.removeItem("token");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("userLogin");
+  updateAuthUI();
+}
+
+function showErrorLogin(message) {
+  loginError.textContent = message;
+  loginError.style.display = "block";
+}
 
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
@@ -28,8 +148,19 @@ function showError(message) {
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
-  return fetch(API_URL)
+  
+  const headers = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
+  return fetch(COMMENTS_URL, { headers })
     .then((response) => {
+      if (response.status === 401) {
+     
+        logout();
+        throw new Error("Сессия истекла. Пожалуйста, авторизуйтесь снова.");
+      }
       if (response.status >= 500) {
         throw new Error("Сервер недоступен. Попробуйте позже.");
       }
@@ -38,7 +169,7 @@ function fetchComments() {
     .then((data) => {
       comments = data.comments.map((comment) => ({
         ...comment,
-        isLiked: false,
+        isLiked: comment.isLiked || false,
         localLikes: comment.likes,
       }));
       renderComments();
@@ -70,8 +201,8 @@ function renderComments() {
       </div>
       <div class="comment-text">${comment.text}</div>
       <div class="likes">
-        <i class="like-button ${comment.isLiked ? "active" : ""}" data-index="${index}">❤️</i>
-        <span>${comment.localLikes}</span>
+        <span class="like-button ${comment.isLiked ? "active" : ""}" data-id="${comment.id}" style="cursor: pointer; font-size: 1.2em;">❤️</span>
+        <span>${comment.likes}</span>
       </div>
     `;
     commentsList.appendChild(li);
@@ -80,45 +211,98 @@ function renderComments() {
   nameInput.value = savedName;
   textInput.value = savedText;
 
+
   document.querySelectorAll(".like-button").forEach((button) => {
     button.addEventListener("click", () => {
-      const index = button.dataset.index;
-      comments[index].isLiked = !comments[index].isLiked;
-      comments[index].localLikes += comments[index].isLiked ? 1 : -1;
-      renderComments();
+      if (!token) {
+        alert("Для лайка необходимо авторизоваться");
+        return;
+      }
+      
+      const commentId = button.dataset.id;
+      toggleLike(commentId, button);
     });
   });
 }
 
-function addComment({ name, text }) {
+
+function toggleLike(commentId, buttonElement) {
+  const headers = {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  };
+  
+  fetch(`${COMMENTS_URL}/${commentId}/toggle-like`, {
+    method: "POST",
+    headers
+  })
+  .then(response => {
+    if (response.status === 401) {
+      logout();
+      throw new Error("Сессия истекла. Пожалуйста, авторизуйтесь снова.");
+    }
+    if (response.status >= 500) {
+      throw new Error("Сервер недоступен. Попробуйте позже.");
+    }
+    return response.json();
+  })
+  .then(data => {
+
+    const comment = comments.find(c => c.id === commentId);
+    if (comment) {
+      comment.isLiked = data.result.isLiked;
+      comment.likes = data.result.likes;
+      
+      // Обновляем UI
+      buttonElement.classList.toggle("active", comment.isLiked);
+      buttonElement.nextElementSibling.textContent = comment.likes;
+    }
+  })
+  .catch(error => {
+    if (error.message === "Failed to fetch") {
+      alert("Нет интернета. Повторите позже.");
+    } else {
+      alert("Ошибка: " + error.message);
+    }
+  });
+}
+
+function addComment({ text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", '<div id="adding">Комментарий добавляется...</div>');
 
-  return fetch(API_URL, {
+  const headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+
+  return fetch(COMMENTS_URL, {
     method: "POST",
-    body: JSON.stringify({ name, text }),
+    headers,
+    body: JSON.stringify({ text }),
   })
     .then((response) => {
-      return response.json().then((data) => ({ status: response.status, data }));
+    
+      if (response.status === 201) {
+        return { status: response.status };
+      } else if (response.status === 400) {
+        return response.json().then((data) => {
+          throw new Error(data.error);
+        });
+      } else if (response.status === 401) {
+        logout();
+        throw new Error("Сессия истекла. Пожалуйста, авторизуйтесь снова.");
+      } else if (response.status >= 500) {
+        throw new Error("Сервер недоступен. Попробуйте позже.");
+      } else {
+        throw new Error(`Ошибка сервера: ${response.status}`);
+      }
     })
-    .then(({ status, data }) => {
-      if (status === 201) {
-        savedName = "";
-        savedText = "";
-        nameInput.value = "";
-        textInput.value = "";
-        return fetchComments();
-      }
-
-      if (status === 400) {
-        throw new Error(data.error + " — Неверные данные");
-      }
-
-      if (status >= 500) {
-        throw new Error("Ошибка сервера. Попробуйте позже.");
-      }
-
-      throw new Error("Ошибка: " + status);
+    .then(() => {
+      savedName = "";
+      savedText = "";
+      textInput.value = "";
+      return fetchComments();
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -135,18 +319,28 @@ function addComment({ name, text }) {
 }
 
 addButton.addEventListener("click", () => {
-  const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
+  if (text.length < 3) {
+    alert("Комментарий должен содержать минимум 3 символа.");
+    return;
+  }
 
-  addButton.
-    disabled = true;
+  if (!token) {
+    alert("Для добавления комментария необходимо авторизоваться");
+    return;
+  }
+
+  addButton.disabled = true;
   addButton.textContent = "Отправка...";
 
-  addComment({ name, text }).finally(() => {
+  addComment({ text }).finally(() => {
     addButton.disabled = false;
     addButton.textContent = "Написать";
   });
 });
 
+loginButton.addEventListener("click", loginUser);
+
+updateAuthUI();
 fetchComments();

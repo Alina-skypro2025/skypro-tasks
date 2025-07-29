@@ -30,8 +30,10 @@ textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
 
+
 function updateAuthUI() {
   if (token) {
+  
     authContainer.innerHTML = `
       <div style="text-align: right; margin-bottom: 15px;">
         <span>Вы вошли как <strong>${userName}</strong></span>
@@ -42,6 +44,7 @@ function updateAuthUI() {
     commentForm.style.display = "block";
     nameInput.value = userName;
   } else {
+  
     authContainer.innerHTML = `
       <div style="text-align: center; padding: 15px; background: #e9f7fe; border-radius: 5px; margin-bottom: 20px;">
         Чтобы добавить комментарий, <a href="#" id="show-login" style="color: #007bff; text-decoration: none; font-weight: bold;">авторизуйтесь</a>
@@ -55,15 +58,18 @@ function updateAuthUI() {
   }
 }
 
+
 function showLoginForm() {
   commentForm.style.display = "none";
   loginForm.style.display = "block";
 }
 
+// Скрытие формы входа
 function hideLoginForm() {
   loginForm.style.display = "none";
   commentForm.style.display = token ? "block" : "none";
 }
+
 
 function loginUser() {
   const login = loginInput.value.trim();
@@ -78,7 +84,6 @@ function loginUser() {
   loginButton.textContent = "Вход...";
   loginError.style.display = "none";
   
-
   fetch(LOGIN_URL, {
     method: "POST",
     body: JSON.stringify({ login, password }),
@@ -90,6 +95,8 @@ function loginUser() {
         return response.json().then((data) => {
           throw new Error(data.error);
         });
+      } else if (response.status === 401) {
+        throw new Error("Неверный логин или пароль");
       } else if (response.status >= 500) {
         throw new Error("Сервер недоступен. Попробуйте позже.");
       } else {
@@ -121,6 +128,7 @@ function loginUser() {
     });
 }
 
+
 function logout() {
   token = null;
   userName = "";
@@ -144,6 +152,7 @@ function showError(message) {
   commentsList.innerHTML = `<div class="error">${message}</div>`;
 }
 
+
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
   
@@ -155,7 +164,6 @@ function fetchComments() {
   return fetch(COMMENTS_URL, { headers })
     .then((response) => {
       if (response.status === 401) {
-     
         logout();
         throw new Error("Сессия истекла. Пожалуйста, авторизуйтесь снова.");
       }
@@ -180,6 +188,7 @@ function fetchComments() {
       }
     });
 }
+
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -226,8 +235,7 @@ function renderComments() {
 
 function toggleLike(commentId, buttonElement) {
   const headers = {
-    "Authorization": `Bearer ${token}`,
-    "Content-Type": "application/json"
+    "Authorization": `Bearer ${token}`
   };
   
   fetch(`${COMMENTS_URL}/${commentId}/toggle-like`, {
@@ -245,7 +253,7 @@ function toggleLike(commentId, buttonElement) {
     return response.json();
   })
   .then(data => {
-
+    
     const comment = comments.find(c => c.id === commentId);
     if (comment) {
       comment.isLiked = data.result.isLiked;
@@ -265,13 +273,19 @@ function toggleLike(commentId, buttonElement) {
   });
 }
 
+
 function addComment({ text }) {
+  if (!token) {
+    alert("Для добавления комментария необходимо авторизоваться");
+    return Promise.resolve();
+  }
+
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", '<div id="adding">Комментарий добавляется...</div>');
 
   const headers = {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
   };
 
   return fetch(COMMENTS_URL, {
@@ -280,7 +294,6 @@ function addComment({ text }) {
     body: JSON.stringify({ text }),
   })
     .then((response) => {
-    
       if (response.status === 201) {
         return { status: response.status };
       } else if (response.status === 400) {
@@ -316,6 +329,7 @@ function addComment({ text }) {
     });
 }
 
+
 addButton.addEventListener("click", () => {
   const text = textInput.value.trim();
 
@@ -338,7 +352,9 @@ addButton.addEventListener("click", () => {
   });
 });
 
+
 loginButton.addEventListener("click", loginUser);
+
 
 updateAuthUI();
 fetchComments();

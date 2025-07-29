@@ -64,7 +64,7 @@ function showLoginForm() {
   loginForm.style.display = "block";
 }
 
-// Скрытие формы входа
+
 function hideLoginForm() {
   loginForm.style.display = "none";
   commentForm.style.display = token ? "block" : "none";
@@ -283,9 +283,9 @@ function addComment({ text }) {
   commentForm.style.display = "none";
   commentsList.insertAdjacentHTML("beforebegin", '<div id="adding">Комментарий добавляется...</div>');
 
+
   const headers = {
-    "Authorization": `Bearer ${token}`,
-    "Content-Type": "application/json"
+    "Authorization": `Bearer ${token}`
   };
 
   return fetch(COMMENTS_URL, {

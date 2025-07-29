@@ -78,11 +78,9 @@ function loginUser() {
   loginButton.textContent = "Вход...";
   loginError.style.display = "none";
   
+
   fetch(LOGIN_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ login, password }),
   })
     .then((response) => {

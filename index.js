@@ -288,7 +288,7 @@ function addComment({ text }) {
     "Authorization": `Bearer ${token}`
   };
 
-  return fetch(COMMENTS_URL, {
+  return fetch(API_URL, {
     method: "POST",
     headers,
     body: JSON.stringify({ text }),

@@ -10,6 +10,7 @@ let comments = [];
 let savedName = "";
 let savedText = "";
 
+
 nameInput.addEventListener("input", () => {
   savedName = nameInput.value;
 });
@@ -91,18 +92,17 @@ function renderComments() {
 
 function addComment({ name, text }) {
   commentForm.style.display = "none";
-  commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
+  commentsList.insertAdjacentHTML("beforebegin", '<div id="adding">Комментарий добавляется...</div>');
 
   return fetch(API_URL, {
     method: "POST",
-    body: JSON.stringify({
-      name: name,
-      text: text,
-     
-    }),
+    body: JSON.stringify({ name, text }),
   })
     .then((response) => {
-      if (response.status === 201) {
+      return response.json().then((data) => ({ status: response.status, data }));
+    })
+    .then(({ status, data }) => {
+      if (status === 201) {
         savedName = "";
         savedText = "";
         nameInput.value = "";
@@ -110,15 +110,15 @@ function addComment({ name, text }) {
         return fetchComments();
       }
 
-      return response.json().then((data) => {
-        if (response.status === 400) {
-          throw new Error(data.error + " — Неверные данные");
-        }
-        if (response.status >= 500) {
-          throw new Error("Ошибка сервера. Попробуйте позже.");
-        }
-        throw new Error(`Ошибка: ${response.status}`);
-      });
+      if (status === 400) {
+        throw new Error(data.error + " — Неверные данные");
+      }
+
+      if (status >= 500) {
+        throw new Error("Ошибка сервера. Попробуйте позже.");
+      }
+
+      throw new Error("Ошибка: " + status);
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
@@ -139,7 +139,8 @@ addButton.addEventListener("click", () => {
   const text = textInput.value.trim();
 
 
-  addButton.disabled = true;
+  addButton.
+    disabled = true;
   addButton.textContent = "Отправка...";
 
   addComment({ name, text }).finally(() => {

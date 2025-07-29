@@ -18,11 +18,13 @@ textInput.addEventListener("input", () => {
   savedText = textInput.value;
 });
 
-
 function showLoadingMessage(message) {
   commentsList.innerHTML = `<div class="loading">${message}</div>`;
 }
 
+function showError(message) {
+  commentsList.innerHTML = `<div class="error">${message}</div>`;
+}
 
 function fetchComments() {
   showLoadingMessage("Загрузка комментариев...");
@@ -43,13 +45,12 @@ function fetchComments() {
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
-        commentsList.innerHTML = `<div class="error">Нет интернета. Проверьте соединение.</div>`;
+        showError("Нет интернета. Проверьте соединение.");
       } else {
-        commentsList.innerHTML = `<div class="error">${error.message}</div>`;
+        showError(error.message);
       }
     });
 }
-
 
 function renderComments() {
   commentsList.innerHTML = "";
@@ -62,7 +63,6 @@ function renderComments() {
   comments.forEach((comment, index) => {
     const li = document.createElement("li");
     li.className = "comment";
-
     li.innerHTML = `
       <div class="comment-header">
         <div class="comment-name">${comment.author.name}</div>
@@ -74,7 +74,6 @@ function renderComments() {
         <span>${comment.localLikes}</span>
       </div>
     `;
-
     commentsList.appendChild(li);
   });
 
@@ -91,39 +90,41 @@ function renderComments() {
   });
 }
 
-
 function addComment({ name, text }) {
   commentForm.style.display = "none";
-  commentsList.insertAdjacentHTML("beforebegin", `<div id="adding">Комментарий добавляется...</div>`);
-
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("text", text);
+  commentsList.insertAdjacentHTML("beforebegin", '<div id="adding">Комментарий добавляется...</div>');
 
   return fetch(API_URL, {
     method: "POST",
-    body: formData,
+    body: JSON.stringify({ name, text }),
   })
     .then((response) => {
-      if (response.status === 201) {
+      return response.json().then((data) => ({ status: response.status, data }));
+    })
+    .then(({ status, data }) => {
+      if (status === 201) {
         savedName = "";
         savedText = "";
         nameInput.value = "";
         textInput.value = "";
         return fetchComments();
-      } else if (response.status === 400) {
-        return response.json().then((data) => {
-          throw new Error(data.error + " Неверные данные");
-        });
-      } else if (response.status >= 500) {
+      }
+
+      if (status === 400) {
+        throw new Error(data.error + " — Неверные данные");
+      }
+
+      if (status >= 500) {
         throw new Error("Ошибка сервера. Попробуйте позже.");
       }
+
+      throw new Error("Ошибка: " + status);
     })
     .catch((error) => {
       if (error.message === "Failed to fetch") {
         alert("Нет интернета. Повторите позже.");
       } else {
-        alert(`Ошибка: ${error.message}`);
+        alert("Ошибка: " + error.message);
       }
     })
     .finally(() => {
@@ -133,17 +134,13 @@ function addComment({ name, text }) {
     });
 }
 
-
 addButton.addEventListener("click", () => {
- const name = nameInput.value.trim();
+  const name = nameInput.value.trim();
   const text = textInput.value.trim();
 
-  if (name.length < 3 || text.length < 3) {
-    alert("Имя и комментарий должны содержать минимум 3 символа.");
-    return;
-  }
 
-  addButton.disabled = true;
+  addButton.
+    disabled = true;
   addButton.textContent = "Отправка...";
 
   addComment({ name, text }).finally(() => {
